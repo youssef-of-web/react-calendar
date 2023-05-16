@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { Calendar, momentLocalizer, Views } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import { MOCK_EVENTS } from "./event";
+const localizer = momentLocalizer(moment);
 
 function App() {
+  const events = MOCK_EVENTS.map((event) => {
+    // new Date(Y, M, D, H, MIN)
+    return {
+      title: event.title,
+      start: new Date(event.start),
+      end: new Date(event.end),
+      color: event.color,
+    };
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" style={{ padding: "14px" }}>
+      <Calendar
+        localizer={localizer}
+        startAccessor={"start"}
+        events={events}
+        endAccessor={"end"}
+        style={{
+          height: "1000px",
+        }}
+        eventPropGetter={(event) => {
+          return {
+            style: {
+              backgroundColor: event.color,
+            },
+          };
+        }}
+        onSelectEvent={(event) => alert(event.title)}
+        views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]}
+      />
     </div>
   );
 }
